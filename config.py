@@ -56,7 +56,7 @@ VERIFY_EXPIRE_2 = int(os.environ.get('VERIFY_EXPIRE_2', 86400))
 # Gap time between first and second verification (in seconds, default 30 mins)
 VERIFY_GAP_TIME = int(os.environ.get('VERIFY_GAP_TIME', 60))
 
-VERIFY_IMAGE = os.environ.get("VERIFY_IMAGE", "")
+VERIFY_IMAGE = os.environ.get("VERIFY_IMAGE", "https://i.ibb.co/HTMRv8Wh/7700112188-f234d295.jpg")
 
 IS_VERIFY = os.environ.get("IS_VERIFY", "True")
 TUT_VID = os.environ.get("TUT_VID", "https://www.youtube.com/@ultroidofficial")
