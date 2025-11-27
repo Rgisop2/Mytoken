@@ -204,7 +204,8 @@ async def start_command(client: Client, message: Message):
                         if TUT_VID and isinstance(TUT_VID, str) and TUT_VID.startswith(('http://', 'https://', 'tg://')):
                             btn.append([InlineKeyboardButton('How to use the bot', url=TUT_VID)])
                         
-                        verify_image = await get_verify_image()
+                        file_id = verify_status.get('link', '')
+                        verify_image = await get_verify_image(file_id)
                         caption_text = f"Your token is expired or not verified. Complete verification to access files.\n\nToken Timeout: {get_exp_time(VERIFY_EXPIRE_1)}"
                         await send_verification_message(message, caption_text, verify_image, InlineKeyboardMarkup(btn))
                     else:
@@ -223,7 +224,8 @@ async def start_command(client: Client, message: Message):
                         if TUT_VID and isinstance(TUT_VID, str) and TUT_VID.startswith(('http://', 'https://', 'tg://')):
                             btn.append([InlineKeyboardButton('How to use the bot', url=TUT_VID)])
                         
-                        verify_image = await get_verify_image()
+                        file_id = verify_status.get('link', '')
+                        verify_image = await get_verify_image(file_id)
                         caption_text = f"Complete second verification to continue accessing files.\n\nToken Timeout: {get_exp_time(VERIFY_EXPIRE_2)}"
                         await send_verification_message(message, caption_text, verify_image, InlineKeyboardMarkup(btn))
                     else:
@@ -333,7 +335,8 @@ async def start_command(client: Client, message: Message):
                     if TUT_VID and isinstance(TUT_VID, str) and TUT_VID.startswith(('http://', 'https://', 'tg://')):
                         btn.append([InlineKeyboardButton('How to use the bot', url=TUT_VID)])
                     
-                    verify_image = await get_verify_image()
+                    file_id = verify_status.get('link', '')
+                    verify_image = await get_verify_image(file_id)
                     caption_text = f"Your Ads token is expired, refresh your token and try again.\n\nToken Timeout: {get_exp_time(VERIFY_EXPIRE_1)}\n\nWhat is the token?\n\nThis is an ads token. If you pass 1 ad, you can use the bot for {get_exp_time(VERIFY_EXPIRE_1)} after passing the ad."
                     await send_verification_message(message, caption_text, verify_image, InlineKeyboardMarkup(btn))
                 else:
