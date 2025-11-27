@@ -177,22 +177,30 @@ async def start_command(client: Client, message: Message):
                     token = ''.join(random.choices(string.ascii_letters + string.digits, k=10))
                     await update_verify_status(id, verify_token=token, is_verified=False, current_step=0)
                     link = await get_shortlink(SHORTLINK_URL_1, SHORTLINK_API_1, f'https://telegram.dog/{client.username}?start=verify_{token}')
-                    btn = [
-                        [InlineKeyboardButton("Click here", url=link)],
-                        [InlineKeyboardButton('How to use the bot', url=TUT_VID)]
-                    ]
-                    await message.reply(f"Your token is expired or not verified. Complete verification to access files.\n\nToken Timeout: {get_exp_time(VERIFY_EXPIRE_1)}", reply_markup=InlineKeyboardMarkup(btn), protect_content=False, quote=True)
+                    
+                    if link and isinstance(link, str) and link.startswith(('http://', 'https://', 'tg://')):
+                        btn = [
+                            [InlineKeyboardButton("Click here", url=link)],
+                            [InlineKeyboardButton('How to use the bot', url=TUT_VID)]
+                        ]
+                        await message.reply(f"Your token is expired or not verified. Complete verification to access files.\n\nToken Timeout: {get_exp_time(VERIFY_EXPIRE_1)}", reply_markup=InlineKeyboardMarkup(btn), protect_content=False, quote=True)
+                    else:
+                        await message.reply(f"Your token is expired or not verified. Complete verification to access files.\n\nToken Timeout: {get_exp_time(VERIFY_EXPIRE_1)}\n\nError: Could not generate verification link. Please try again.", protect_content=False, quote=True)
                     return
                 
                 elif access_type == 'require_step2':
                     token = ''.join(random.choices(string.ascii_letters + string.digits, k=10))
                     await update_verify_status(id, verify_token=token, is_verified=False, current_step=1)
                     link = await get_shortlink(SHORTLINK_URL_2, SHORTLINK_API_2, f'https://telegram.dog/{client.username}?start=verify_{token}')
-                    btn = [
-                        [InlineKeyboardButton("Click here", url=link)],
-                        [InlineKeyboardButton('How to use the bot', url=TUT_VID)]
-                    ]
-                    await message.reply(f"Complete second verification to continue accessing files.\n\nToken Timeout: {get_exp_time(VERIFY_EXPIRE_2)}", reply_markup=InlineKeyboardMarkup(btn), protect_content=False, quote=True)
+                    
+                    if link and isinstance(link, str) and link.startswith(('http://', 'https://', 'tg://')):
+                        btn = [
+                            [InlineKeyboardButton("Click here", url=link)],
+                            [InlineKeyboardButton('How to use the bot', url=TUT_VID)]
+                        ]
+                        await message.reply(f"Complete second verification to continue accessing files.\n\nToken Timeout: {get_exp_time(VERIFY_EXPIRE_2)}", reply_markup=InlineKeyboardMarkup(btn), protect_content=False, quote=True)
+                    else:
+                        await message.reply(f"Complete second verification to continue accessing files.\n\nToken Timeout: {get_exp_time(VERIFY_EXPIRE_2)}\n\nError: Could not generate verification link. Please try again.", protect_content=False, quote=True)
                     return
 
             # If access is allowed, proceed to decode and send files
@@ -290,11 +298,15 @@ async def start_command(client: Client, message: Message):
                 token = ''.join(random.choices(string.ascii_letters + string.digits, k=10))
                 await update_verify_status(id, verify_token=token, link="")
                 link = await get_shortlink(SHORTLINK_URL_1, SHORTLINK_API_1, f'https://telegram.dog/{client.username}?start=verify_{token}')
-                btn = [
-                    [InlineKeyboardButton("Click here", url=link)],
-                    [InlineKeyboardButton('How to use the bot', url=TUT_VID)]
-                ]
-                await message.reply(f"Your Ads token is expired, refresh your token and try again.\n\nToken Timeout: {get_exp_time(VERIFY_EXPIRE_1)}\n\nWhat is the token?\n\nThis is an ads token. If you pass 1 ad, you can use the bot for {get_exp_time(VERIFY_EXPIRE_1)} after passing the ad.", reply_markup=InlineKeyboardMarkup(btn), protect_content=False, quote=True)
+                
+                if link and isinstance(link, str) and link.startswith(('http://', 'https://', 'tg://')):
+                    btn = [
+                        [InlineKeyboardButton("Click here", url=link)],
+                        [InlineKeyboardButton('How to use the bot', url=TUT_VID)]
+                    ]
+                    await message.reply(f"Your Ads token is expired, refresh your token and try again.\n\nToken Timeout: {get_exp_time(VERIFY_EXPIRE_1)}\n\nWhat is the token?\n\nThis is an ads token. If you pass 1 ad, you can use the bot for {get_exp_time(VERIFY_EXPIRE_1)} after passing the ad.", reply_markup=InlineKeyboardMarkup(btn), protect_content=False, quote=True)
+                else:
+                    await message.reply(f"Your Ads token is expired, refresh your token and try again.\n\nToken Timeout: {get_exp_time(VERIFY_EXPIRE_1)}\n\nWhat is the token?\n\nThis is an ads token. If you pass 1 ad, you can use the bot for {get_exp_time(VERIFY_EXPIRE_1)} after passing the ad.\n\nError: Could not generate verification link. Please try again.", protect_content=False, quote=True)
 
 
 WAIT_MSG = "<b>ᴡᴏʀᴋɪɴɢ....</b>"
