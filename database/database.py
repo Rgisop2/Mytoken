@@ -5,6 +5,7 @@ dbclient = motor.motor_asyncio.AsyncIOMotorClient(DB_URI)
 database = dbclient[DB_NAME]
 
 user_data = database['users']
+link_data = database['links']
 
 default_verify = {
     'is_verified': False,           # user currently allowed to access files?
@@ -15,6 +16,13 @@ default_verify = {
     'verify1_expiry': 0,            # timestamp when first verification expires
     'verify2_expiry': 0,            # timestamp when second verification expires
     'gap_expiry': 0                 # timestamp until which user is in gap between 1 and 2
+}
+
+default_link = {
+    'file_id': "",                  # unique file identifier
+    'image': "",                    # custom verification image for this file (empty = use VERIFY_IMAGE)
+    'batch_image': "",              # image for batch links (empty = use VERIFY_IMAGE)
+    'created_at': 0
 }
 
 def new_user(id):
@@ -53,6 +61,24 @@ async def db_verify_status(user_id):
 
 async def db_update_verify_status(user_id, verify):
     await user_data.update_one({'_id': user_id}, {'$set': {'verify_status': verify}})
+
+async def db_get_link(file_id: str):
+    link = await link_data.find_one({'file_id': file_id})
+    if link:
+        return link
+    return default_link.copy()
+
+async def db_save_link(file_id: str, image: str = "", batch_image: str = ""):
+    existing = await link_data.find_one({'file_id': file_id})
+    if existing:
+        await link_data.update_one({'file_id': file_id}, {'$set': {'image': image, 'batch_image': batch_image}})
+    else:
+        await link_data.insert_one({
+            'file_id': file_id,
+            'image': image,
+            'batch_image': batch_image,
+            'created_at': 0
+        })
 
 async def full_userbase():
     user_docs = user_data.find()
