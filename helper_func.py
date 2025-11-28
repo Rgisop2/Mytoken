@@ -141,18 +141,24 @@ async def get_shortlink(url, api, link):
 
 async def get_verify_image(file_id: str = "") -> str:
     """Get verification image - uses custom image if available, otherwise uses default VERIFY_IMAGE"""
+    print(f"[DEBUG] get_verify_image called with file_id: {file_id}")
     if file_id:
         try:
             link = await db_get_link(file_id)
+            print(f"[DEBUG] Database link data: {link}")
             if link:
                 # Check for batch image first (for batch links)
                 if file_id.startswith('batch-') and link.get('batch_image'):
+                    print(f"[DEBUG] Found batch_image: {link.get('batch_image')}")
                     return link['batch_image']
                 # Check for regular image (for single file links)
                 elif link.get('image'):
+                    print(f"[DEBUG] Found image: {link.get('image')}")
                     return link['image']
+            print(f"[DEBUG] No custom image found in database")
         except Exception as e:
-            print(f"Error fetching verify image: {e}")
+            print(f"[DEBUG] Error fetching verify image: {e}")
+    print(f"[DEBUG] Returning default VERIFY_IMAGE: {VERIFY_IMAGE}")
     return VERIFY_IMAGE
 
 def get_exp_time(seconds):
