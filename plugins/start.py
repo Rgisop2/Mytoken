@@ -164,6 +164,7 @@ async def start_command(client: Client, message: Message):
             access_type = None  # 'full', 'temporary', or None
             
             # Extract file_id from the base64_string for custom image retrieval
+            file_id_for_image = ""
             try:
                 base64_string = message.text.split(" ", 1)[1]
                 _string = await decode(base64_string)
@@ -172,21 +173,16 @@ async def start_command(client: Client, message: Message):
                 
                 # Construct file_id based on the argument format
                 if len(argument) == 3:
-                    # Batch link format: batch-{f_msg_id}-{s_msg_id}
-                    start_id = int(int(argument[1]) / abs(client.db_channel.id))
-                    end_id = int(int(argument[2]) / abs(client.db_channel.id))
-                    file_id_for_image = f"batch-{start_id}-{end_id}"
+                    # Batch link format: batch-{encoded_start}-{encoded_end}
+                    file_id_for_image = f"batch-{argument[1]}-{argument[2]}"
                     print(f"[DEBUG] Batch link detected, file_id_for_image: {file_id_for_image}")
                 elif len(argument) == 2:
-                    # Single file link format: get-{msg_id}
-                    msg_id = int(int(argument[1]) / abs(client.db_channel.id))
-                    file_id_for_image = f"get-{msg_id}"
+                    # Single file link format: get-{encoded_msg_id}
+                    file_id_for_image = f"get-{argument[1]}"
                     print(f"[DEBUG] Single link detected, file_id_for_image: {file_id_for_image}")
                 else:
-                    file_id_for_image = ""
                     print(f"[DEBUG] Unknown argument format, file_id_for_image set to empty")
             except Exception as e:
-                file_id_for_image = ""
                 print(f"[DEBUG] Error extracting file_id: {e}")
             
             # Determine access level based on dual verification state
