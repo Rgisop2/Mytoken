@@ -28,6 +28,7 @@ class Bot(Client):
             bot_token=TG_BOT_TOKEN
         )
         self.LOGGER = LOGGER
+        self.listeners = {}
 
     async def start(self):
         await super().start()
