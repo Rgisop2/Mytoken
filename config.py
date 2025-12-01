@@ -41,17 +41,17 @@ TG_BOT_WORKERS = int(os.environ.get("TG_BOT_WORKERS", "4"))
 # First shortener settings (used for first verification)
 SHORTLINK_URL = os.environ.get("SHORTLINK_URL", "arolinks.com")
 SHORTLINK_API = os.environ.get("SHORTLINK_API", "2b3dd0b54ab06c6c8e6cf617f20d5fff15ee1b71")
-SHORTLINK_URL_1 = os.environ.get("SHORTLINK_URL_1", SHORTLINK_URL)
-SHORTLINK_API_1 = os.environ.get("SHORTLINK_API_1", SHORTLINK_API)
+SHORTLINK_URL_1 = os.environ.get("SHORTLINK_URL_1", "arolinks.com")
+SHORTLINK_API_1 = os.environ.get("SHORTLINK_API_1", "2b3dd0b54ab06c6c8e6cf617f20d5fff15ee1b71")
 
 # Second shortener settings (used for second verification, optional for dual verification)
 SHORTLINK_URL_2 = os.environ.get("SHORTLINK_URL_2", "arolinks.com")
 SHORTLINK_API_2 = os.environ.get("SHORTLINK_API_2", "2b3dd0b54ab06c6c8e6cf617f20d5fff15ee1b71")
 
 # Verification expiry times (in seconds)
-VERIFY_EXPIRE = int(os.environ.get('VERIFY_EXPIRE', 86400))  # 24 hours by default
-VERIFY_EXPIRE_1 = int(os.environ.get('VERIFY_EXPIRE_1', 86400))
-VERIFY_EXPIRE_2 = int(os.environ.get('VERIFY_EXPIRE_2', 86400))
+VERIFY_EXPIRE = int(os.environ.get('VERIFY_EXPIRE', 300))  # 24 hours by default
+VERIFY_EXPIRE_1 = int(os.environ.get('VERIFY_EXPIRE_1', 300))
+VERIFY_EXPIRE_2 = int(os.environ.get('VERIFY_EXPIRE_2', 300))
 
 # Gap time between first and second verification (in seconds, default 30 mins)
 VERIFY_GAP_TIME = int(os.environ.get('VERIFY_GAP_TIME', 60))
