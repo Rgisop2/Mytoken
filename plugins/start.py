@@ -55,17 +55,16 @@ async def send_verification_message(message, caption_text, verify_image, reply_m
                 photo=verify_image,
                 caption=caption_text,
                 reply_markup=reply_markup,
-                protect_content=False,
                 quote=True
             )
             print(f"[DEBUG] Image sent successfully!")
         except Exception as e:
             # If image fails, send text only
             print(f"[DEBUG] Failed to send image: {e}")
-            await message.reply(caption_text, reply_markup=reply_markup, protect_content=False, quote=True)
+            await message.reply(caption_text, reply_markup=reply_markup, quote=True)
     else:
         print(f"[DEBUG] No valid image provided, sending text only. Image value: {verify_image}")
-        await message.reply(caption_text, reply_markup=reply_markup, protect_content=False, quote=True)
+        await message.reply(caption_text, reply_markup=reply_markup, quote=True)
 
 
 @Bot.on_message(filters.command('start') & filters.private & subscribed)
@@ -118,7 +117,7 @@ async def start_command(client: Client, message: Message):
                                          verify1_expiry=verify_status['verify1_expiry'],
                                          gap_expiry=verify_status['gap_expiry'],
                                          verify_token="", verified_time=now)
-                await message.reply(f"✅ First verification complete! You now have temporary access.\n\nAccess valid for: {get_exp_time(VERIFY_EXPIRE_1)}", protect_content=False, quote=True)
+                await message.reply(f"✅ First verification complete! You now have temporary access.\n\nAccess valid for: {get_exp_time(VERIFY_EXPIRE_1)}", quote=True)
                 return
             
             # STEP 2 verification
@@ -131,7 +130,7 @@ async def start_command(client: Client, message: Message):
                 await update_verify_status(id, is_verified=True, current_step=2,
                                          verify2_expiry=verify_status['verify2_expiry'],
                                          verify_token="", verified_time=now)
-                await message.reply(f"✅ Second verification complete! Full access unlocked.\n\nAccess valid for: {get_exp_time(VERIFY_EXPIRE_2)}", protect_content=False, quote=True)
+                await message.reply(f"✅ Second verification complete! Full access unlocked.\n\nAccess valid for: {get_exp_time(VERIFY_EXPIRE_2)}", quote=True)
                 return
 
         verify_status = await get_verify_status(id)
@@ -235,7 +234,7 @@ async def start_command(client: Client, message: Message):
                         caption_text = f"Your token is expired or not verified. Complete verification to access files.\n\nToken Timeout: {get_exp_time(VERIFY_EXPIRE_1)}"
                         await send_verification_message(message, caption_text, verify_image, InlineKeyboardMarkup(btn))
                     else:
-                        await message.reply(f"Your token is expired or not verified. Complete verification to access files.\n\nToken Timeout: {get_exp_time(VERIFY_EXPIRE_1)}\n\nError: Could not generate verification link. Please try again.", protect_content=False, quote=True)
+                        await message.reply(f"Your token is expired or not verified. Complete verification to access files.\n\nToken Timeout: {get_exp_time(VERIFY_EXPIRE_1)}\n\nError: Could not generate verification link. Please try again.", quote=True)
                     return
                 
                 elif access_type == 'require_step2':
@@ -255,7 +254,7 @@ async def start_command(client: Client, message: Message):
                         caption_text = f"Complete second verification to continue accessing files.\n\nToken Timeout: {get_exp_time(VERIFY_EXPIRE_2)}"
                         await send_verification_message(message, caption_text, verify_image, InlineKeyboardMarkup(btn))
                     else:
-                        await message.reply(f"Complete second verification to continue accessing files.\n\nToken Timeout: {get_exp_time(VERIFY_EXPIRE_2)}\n\nError: Could not generate verification link. Please try again.", protect_content=False, quote=True)
+                        await message.reply(f"Complete second verification to continue accessing files.\n\nToken Timeout: {get_exp_time(VERIFY_EXPIRE_2)}\n\nError: Could not generate verification link. Please try again.", quote=True)
                     return
 
             # If access is allowed, proceed to decode and send files
@@ -309,12 +308,12 @@ async def start_command(client: Client, message: Message):
                         reply_markup = None
 
                     try:
-                        snt_msg = await msg.copy(chat_id=message.from_user.id, caption=caption, parse_mode=ParseMode.HTML, reply_markup=reply_markup, protect_content=PROTECT_CONTENT)
+                        snt_msg = await msg.copy(chat_id=message.from_user.id, caption=caption, parse_mode=ParseMode.HTML, reply_markup=reply_markup)
                         await asyncio.sleep(0.5)
                         snt_msgs.append(snt_msg)
                     except FloodWait as e:
                         await asyncio.sleep(e.x)
-                        snt_msg = await msg.copy(chat_id=message.from_user.id, caption=caption, parse_mode=ParseMode.HTML, reply_markup=reply_markup, protect_content=PROTECT_CONTENT)
+                        snt_msg = await msg.copy(chat_id=message.from_user.id, caption=caption, parse_mode=ParseMode.HTML, reply_markup=reply_markup)
                         snt_msgs.append(snt_msg)
                     except:
                         pass
@@ -366,7 +365,7 @@ async def start_command(client: Client, message: Message):
                     caption_text = f"Your Ads token is expired, refresh your token and try again.\n\nToken Timeout: {get_exp_time(VERIFY_EXPIRE_1)}\n\nWhat is the token?\n\nThis is an ads token. If you pass 1 ad, you can use the bot for {get_exp_time(VERIFY_EXPIRE_1)} after passing the ad."
                     await send_verification_message(message, caption_text, verify_image, InlineKeyboardMarkup(btn))
                 else:
-                    await message.reply(f"Your Ads token is expired, refresh your token and try again.\n\nToken Timeout: {get_exp_time(VERIFY_EXPIRE_1)}\n\nWhat is the token?\n\nThis is an ads token. If you pass 1 ad, you can use the bot for {get_exp_time(VERIFY_EXPIRE_1)} after passing the ad.\n\nError: Could not generate verification link. Please try again.", protect_content=False, quote=True)
+                    await message.reply(f"Your Ads token is expired, refresh your token and try again.\n\nToken Timeout: {get_exp_time(VERIFY_EXPIRE_1)}\n\nWhat is the token?\n\nThis is an ads token. If you pass 1 ad, you can use the bot for {get_exp_time(VERIFY_EXPIRE_1)} after passing the ad.\n\nError: Could not generate verification link. Please try again.", quote=True)
 
 
 WAIT_MSG = "<b>ᴡᴏʀᴋɪɴɢ....</b>"
