@@ -173,11 +173,20 @@ async def start_command(client: Client, message: Message):
                 # Construct file_id based on the argument format
                 if len(argument) == 3:
                     # Batch link format: batch-{encoded_start}-{encoded_end}
-                    file_id_for_image = f"batch-{argument[1]}-{argument[2]}"
+                    try:
+                        f_msg_id_original = int(int(argument[1]) / abs(client.db_channel.id))
+                        s_msg_id_original = int(int(argument[2]) / abs(client.db_channel.id))
+                        file_id_for_image = f"batch-{f_msg_id_original}-{s_msg_id_original}"
+                    except:
+                        file_id_for_image = f"batch-{argument[1]}-{argument[2]}"
                     print(f"[DEBUG] Batch link detected, file_id_for_image: {file_id_for_image}")
                 elif len(argument) == 2:
                     # Single file link format: get-{encoded_msg_id}
-                    file_id_for_image = f"get-{argument[1]}"
+                    try:
+                        msg_id_original = int(int(argument[1]) / abs(client.db_channel.id))
+                        file_id_for_image = f"get-{msg_id_original}"
+                    except:
+                        file_id_for_image = f"get-{argument[1]}"
                     print(f"[DEBUG] Single link detected, file_id_for_image: {file_id_for_image}")
                 else:
                     print(f"[DEBUG] Unknown argument format, file_id_for_image set to empty")
