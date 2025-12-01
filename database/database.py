@@ -70,15 +70,19 @@ async def db_get_link(file_id: str):
 
 async def db_save_link(file_id: str, image: str = "", batch_image: str = ""):
     existing = await link_data.find_one({'file_id': file_id})
-    if existing:
-        await link_data.update_one({'file_id': file_id}, {'$set': {'image': image, 'batch_image': batch_image}})
-    else:
-        await link_data.insert_one({
-            'file_id': file_id,
-            'image': image,
-            'batch_image': batch_image,
-            'created_at': 0
-        })
+    update_data = {}
+    if image:
+        update_data['image'] = image
+    if batch_image:
+        update_data['batch_image'] = batch_image
+    
+    if update_data:
+        if existing:
+            await link_data.update_one({'file_id': file_id}, {'$set': update_data})
+        else:
+            update_data['file_id'] = file_id
+            update_data['created_at'] = 0
+            await link_data.insert_one(update_data)
 
 async def full_userbase():
     user_docs = user_data.find()
