@@ -15,9 +15,7 @@ default_verify = {
     'current_step': 0,              # 0 = never verified, 1 = after first verify, 2 = after second verify
     'verify1_expiry': 0,            # timestamp when first verification expires
     'verify2_expiry': 0,            # timestamp when second verification expires
-    'gap_expiry': 0,                # timestamp until which user is in gap between 1 and 2
-    'last_entry_link': "",          # stores the original /start payload link
-    'verification_message_id': 0    # stores the ID of the current verification message
+    'gap_expiry': 0                 # timestamp until which user is in gap between 1 and 2
 }
 
 default_link = {
@@ -38,9 +36,7 @@ def new_user(id):
             'current_step': 0,
             'verify1_expiry': 0,
             'verify2_expiry': 0,
-            'gap_expiry': 0,
-            'last_entry_link': "",
-            'verification_message_id': 0
+            'gap_expiry': 0
         }
     }
 
