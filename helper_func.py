@@ -102,8 +102,7 @@ async def get_verify_status(user_id):
     return verify
 
 async def update_verify_status(user_id, verify_token="", is_verified=False, verified_time=0, link="", 
-                              current_step=None, verify1_expiry=None, verify2_expiry=None, gap_expiry=None,
-                              last_entry_link="", verification_message_id=0):
+                              current_step=None, verify1_expiry=None, verify2_expiry=None, gap_expiry=None):
     current = await db_verify_status(user_id)
     current['verify_token'] = verify_token
     current['is_verified'] = is_verified
@@ -119,10 +118,6 @@ async def update_verify_status(user_id, verify_token="", is_verified=False, veri
         current['verify2_expiry'] = verify2_expiry
     if gap_expiry is not None:
         current['gap_expiry'] = gap_expiry
-    if last_entry_link:
-        current['last_entry_link'] = last_entry_link
-    if verification_message_id:
-        current['verification_message_id'] = verification_message_id
     
     await db_update_verify_status(user_id, current)
 
@@ -195,20 +190,5 @@ def get_readable_time(seconds: int) -> str:
     time_list.reverse()
     up_time += ":".join(time_list)
     return up_time
-
-async def delete_old_verification_message(client, user_id):
-    """Delete previous verification message if it exists"""
-    try:
-        verify_status = await get_verify_status(user_id)
-        old_msg_id = verify_status.get('verification_message_id', 0)
-        
-        if old_msg_id > 0:
-            try:
-                await client.delete_messages(chat_id=user_id, message_ids=old_msg_id)
-                print(f"[DEBUG] Deleted old verification message {old_msg_id} for user {user_id}")
-            except Exception as e:
-                print(f"[DEBUG] Could not delete verification message: {e}")
-    except Exception as e:
-        print(f"[DEBUG] Error in delete_old_verification_message: {e}")
 
 subscribed = filters.create(is_subscribed)
