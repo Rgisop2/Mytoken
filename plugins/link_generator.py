@@ -2,7 +2,7 @@
 
 from pyrogram import Client, filters
 from pyrogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton
-import asyncio
+from pyrogram.errors import ListenerTimeout
 from bot import Bot
 from config import ADMINS
 from helper_func import encode, get_message_id
@@ -13,7 +13,7 @@ async def batch(client: Client, message: Message):
     while True:
         try:
             first_message = await client.ask(text = "𝐅𝐨𝐫𝐰𝐚𝐫𝐝 𝐭𝐡𝐞 𝐅𝐢𝐫𝐬𝐭 𝐌𝐞𝐬𝐬𝐚𝐠𝐞 𝐟𝐫𝐨𝐦 𝐃𝐚𝐭𝐚𝐛𝐚𝐬𝐞 𝐂𝐡𝐚𝐧𝐧𝐞𝐥 (with Quotes)..\n\n𝐨𝐫 𝐒𝐞𝐧𝐝 𝐭𝐡𝐞 𝐃𝐚𝐭𝐚𝐛𝐚𝐬𝐞 𝐂𝐡𝐚𝐧𝐧𝐞𝐥 𝐏𝐨𝐬𝐭 𝐥𝐢𝐧𝐤", chat_id = message.from_user.id, filters=(filters.forwarded | (filters.text & ~filters.forwarded)), timeout=60)
-        except asyncio.TimeoutError:
+        except ListenerTimeout:
             await message.reply("⏱️ Timeout! Please try the /batch command again.", quote=True)
             return
         except Exception as e:
@@ -29,7 +29,7 @@ async def batch(client: Client, message: Message):
     while True:
         try:
             second_message = await client.ask(text = "𝐅𝐨𝐫𝐰𝐚𝐫𝐝 𝐭𝐡𝐞 𝐋𝐚𝐬𝐭 𝐌𝐞𝐬𝐬𝐚𝐠𝐞 𝐟𝐫𝐨𝐦 𝐃𝐚𝐭𝐚𝐛𝐚𝐬𝐞 𝐂𝐡𝐚𝐧𝐧𝐞𝐥..! (with Quotes)..\n𝐨𝐫 𝐒𝐞𝐧𝐝 𝐭𝐡𝐞 𝐃𝐚𝐭𝐚𝐛𝐚𝐬𝐞 𝐂𝐡𝐚𝐧𝐧𝐞𝐥 𝐏𝐨𝐬𝐭 𝐥𝐢𝐧𝐤", chat_id = message.from_user.id, filters=(filters.forwarded | (filters.text & ~filters.forwarded)), timeout=60)
-        except asyncio.TimeoutError:
+        except ListenerTimeout:
             await message.reply("⏱️ Timeout! Please try the /batch command again.", quote=True)
             return
         except Exception as e:
@@ -59,11 +59,11 @@ async def batch(client: Client, message: Message):
                     timeout=60
                 )
                 batch_image = image_msg.text.strip()
-            except asyncio.TimeoutError:
+            except ListenerTimeout:
                 await message.reply("⏱️ Image URL timeout! Using default image.", quote=True)
             except Exception:
                 batch_image = ""
-    except asyncio.TimeoutError:
+    except ListenerTimeout:
         pass
     except Exception:
         pass
@@ -85,7 +85,7 @@ async def link_generator(client: Client, message: Message):
     while True:
         try:
             channel_message = await client.ask(text = "𝐅𝐨𝐫𝐰𝐚𝐫𝐝 𝐌𝐞𝐬𝐬𝐚𝐠𝐞 𝐟𝐫𝐨𝐦 𝐃𝐚𝐭𝐚𝐛𝐚𝐬𝐞 𝐂𝐡𝐚𝐧𝐧𝐞𝐥 (with Quotes)..\n\n𝐨𝐫 𝐒𝐞𝐧𝐝 𝐭𝐡𝐞 𝐃𝐚𝐭𝐚𝐛𝐚𝐬𝐞 𝐂𝐡𝐚𝐧𝐧𝐞𝐥 𝐏𝐨𝐬𝐭 𝐥𝐢𝐧𝐤", chat_id = message.from_user.id, filters=(filters.forwarded | (filters.text & ~filters.forwarded)), timeout=60)
-        except asyncio.TimeoutError:
+        except ListenerTimeout:
             await message.reply("⏱️ Timeout! Please try the /genlink command again.", quote=True)
             return
         except Exception as e:
@@ -108,7 +108,7 @@ async def link_generator(client: Client, message: Message):
         )
         if image_msg.text.lower() != "skip":
             custom_image = image_msg.text.strip()
-    except asyncio.TimeoutError:
+    except ListenerTimeout:
         custom_image = ""
     except Exception:
         custom_image = ""
