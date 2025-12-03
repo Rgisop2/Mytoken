@@ -240,7 +240,10 @@ async def start_command(client: Client, message: Message):
                         
                         # Use the extracted file_id_for_image to get custom image
                         verify_image = await get_verify_image(file_id_for_image)
-                        caption_text = f"Your token is expired or not verified. Complete verification to access files.\n\nToken Timeout: {get_exp_time(VERIFY_EXPIRE_1)}"
+                        caption_text = caption_text = (
+                            "<blockquote>Your token is expired or not verified. Complete verification to access files.</blockquote>\n\n"
+    f"Token Timeout: {get_exp_time(VERIFY_EXPIRE_1)}"
+)\n\nToken Timeout: {get_exp_time(VERIFY_EXPIRE_1)}"
                         await send_verification_message(message, caption_text, verify_image, InlineKeyboardMarkup(btn))
                     else:
                         await message.reply(f"Your token is expired or not verified. Complete verification to access files.\n\nToken Timeout: {get_exp_time(VERIFY_EXPIRE_1)}\n\nError: Could not generate verification link. Please try again.", quote=True)
